@@ -19,17 +19,16 @@ import java.util.List;
 
 /**
  * Created by Jeremy Fu on 7/09/2016.
+ * Based from Developer Android Documentation
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     private List<Pokemon> pokemonList;
-   // private String pokeList[];
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView name;
         public TextView number;
         public ImageView image;
-        //public Pokemon aPokemon;
 
         public ViewHolder (View v) {
             super(v);
@@ -46,7 +45,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             String numberKey = number.getText().toString();
             System.out.println(numberKey);
             showPokemonIntent.putExtra("number", numberKey);
-            //showPokemonIntent.putExtra("name", name.getText().toString());
             context.startActivity(showPokemonIntent);
         }
     }
@@ -65,7 +63,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        System.out.println("called");
         holder.name.setText(pokemonList.get(position).getName());
         byte[] byteArray = pokemonList.get(position).getImage();
         holder.number.setText(pokemonList.get(position).getNumber());

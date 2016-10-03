@@ -36,13 +36,7 @@ public class PokemonDbAccess {
             pokemonDbContract.insert(pokemon);
         }
     }
-/*
-    public void deletePokemons(String numbers[]){
-        for(String number : numbers){
-            pokemonDbContract.delete(number);
-        }
-    }
-    */
+
     public void deleteAll(){
         String numbers[] = {"001"};
         for (int i = 0; i < 151; i++) {

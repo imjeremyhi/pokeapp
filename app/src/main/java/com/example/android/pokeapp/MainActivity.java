@@ -51,22 +51,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+    //This screen presents through a recycler view, all the Pokemon fetched from PokeApi
     private List<Pokemon> returnedList;
     private RecyclerView myRecyclerView;
     private GridLayoutManager myGridLayoutManager;
     private RecyclerAdapter myAdapter;
-    //Parcelable listState;
-
-    //int allResultsReceived;
-    //private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        //ActionBar actionBar = getSupportActionBar();
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ff0000")));
         myRecyclerView = (RecyclerView)findViewById(R.id.myRecyclerView);
@@ -74,49 +68,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         myRecyclerView.setLayoutManager(myGridLayoutManager);
         PokemonDbHelper myDbHelper = new PokemonDbHelper(this);
         PokemonDbAccess myDbAccess = new PokemonDbAccess(myDbHelper);
-        //if (savedInstanceState != null) {
-          //  listState = savedInstanceState.getParcelable("positionList");
-        //}
 
-        System.out.println("called going back");
         List<Pokemon> passedList = (List<Pokemon>)getIntent().getSerializableExtra("returnedList");
         if (passedList != null) {
-            System.out.println("passed list is ");
-            System.out.println(passedList);
             returnedList = passedList;
-            //onRestoreInstanceState(savedInstanceState);
             loadAdapter();
         } else {
-            System.out.println("passed list is ");
-            System.out.println(passedList);
             returnedList = myDbAccess.getAll();
             loadAdapter();
         }
     }
-/*
-    @Override
-    protected void onSaveInstanceState(Bundle state) {
-        super.onSaveInstanceState(state);
-        state.putParcelable("positionList", myGridLayoutManager.onSaveInstanceState());
-    }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle state) {
-        super.onRestoreInstanceState(state);
-        System.out.println("in restore");
-        listState = state.getParcelable("positionList");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        System.out.println("in on resume");
-        if (listState != null) {
-            System.out.println("in not null");
-            myGridLayoutManager.onRestoreInstanceState(listState);
-        }
-    }
-*/
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
@@ -137,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         myAdapter.setFilter(returnedList);
                         return true;
                     }
-
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
                         return true;
@@ -170,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void loadAdapter(){
-        myAdapter = new RecyclerAdapter(returnedList/*pokemonList*/);
+        myAdapter = new RecyclerAdapter(returnedList);
         myRecyclerView.setAdapter(myAdapter);
     }
 

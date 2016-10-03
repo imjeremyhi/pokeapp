@@ -10,16 +10,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/grass">
-<!--
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/grass"
-        android:adjustViewBounds="true"
-        android:tileMode="repeat"
-        android:dither="true"
-        />
--->
+
     <TextView
         android:id="@+id/number"
         android:layout_width="wrap_content"
@@ -363,15 +354,6 @@
         android:paddingRight="10dp"
         android:layout_marginTop="15dp" />
 
-    <!--
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="location"
-        android:layout_alignLeft="@+id/locationField"
-        android:layout_marginLeft="10dp" />
--->
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -382,28 +364,6 @@
         android:onClick="movesDetail"
         android:layout_marginTop="15dp"
         android:paddingBottom="20dp" />
-<!--
-    <TextView
-        android:id="@+id/moves"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:text="Moves:"
-        android:layout_below="@+id/location"
-        android:layout_marginTop="15dp"
-        android:paddingBottom="15dp"
-        android:paddingRight="10dp" />
-        -->
-
-    <!--
-        <TextView
-            android:id="@+id/evolution"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="evolution"
-            android:layout_alignLeft="@+id/evolutionField"
-            android:layout_marginLeft="10dp" />
-            -->
-
+        
 </RelativeLayout>
 </ScrollView>

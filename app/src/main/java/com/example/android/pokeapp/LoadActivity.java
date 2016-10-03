@@ -2,7 +2,6 @@ package com.example.android.pokeapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,36 +29,32 @@ import java.util.concurrent.Exchanger;
 /**
  * Created by Jeremy Fu on 18/09/2016.
  */
+// Initial splash screen to load all the Pokemon from PokeAPI
 public class LoadActivity extends AppCompatActivity {
 
-    RequestQueue queue;
-    int indexLoop = 1;
+    private RequestQueue queue;
+    private int indexLoop = 1;
     private Pokemon pokemonToAdd;
     private String locationUrl;
     private String imageUrl;
-    PokemonDbHelper myDbHelper;
-    PokemonDbAccess myDbAccess;
+    private PokemonDbHelper myDbHelper;
+    private PokemonDbAccess myDbAccess;
     private List<Pokemon> returnedList;
     private List<Pokemon> storeList;
-    ProgressBar progressBar;
-    SharedPreferences sharedPref;
-
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loader_activity);
         getSupportActionBar().hide();
-        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ff0000")));
         progressBar = (ProgressBar)findViewById(R.id.loadProgressBar);
         myDbHelper = new PokemonDbHelper(this);
         myDbAccess = new PokemonDbAccess(myDbHelper);
         returnedList = new ArrayList<>();
         storeList = new ArrayList<>();
 
-
-        //Set up volley request
-        //int complete = 0;
+        //If incomplete database - reset database and re-retrieve data from pokeapi
         if (myDbAccess.getAll().size() < 151 && myDbAccess.getAll().size() > 0) {
             myDbAccess.deleteAll();
             String url = "http://pokeapi.co/api/v2/pokemon-species/?&limit=151";
@@ -71,6 +66,7 @@ public class LoadActivity extends AppCompatActivity {
                 }
             });
         } else if (myDbAccess.getAll().size() == 0) {
+            //Database is empty so get pokemon from pokeapi
             String url = "http://pokeapi.co/api/v2/pokemon-species/?&limit=151";
             volleyRequest(url, new VolleyCallback() {
                 @Override
@@ -80,45 +76,15 @@ public class LoadActivity extends AppCompatActivity {
                 }
             });
         } else {
+            //Database has at least 151 entries and is complete so load the recycler view activity and kill this activity
             returnedList = myDbAccess.getAll();
             Intent showMainIntent = new Intent(this, MainActivity.class);
             showMainIntent.putExtra("returnedList", (Serializable)returnedList);
             this.startActivity(showMainIntent);
             this.finish();
-        }
-    }
-/*
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (myDbAccess.hasPokemon("151") == true) {
-            returnedList = myDbAccess.getAll();
-            Intent showMainIntent = new Intent(this, MainActivity.class);
-            showMainIntent.putExtra("returnedList", (Serializable)returnedList);
-            this.startActivity(showMainIntent);
-            this.finish();
-        } else {
-            sharedPref = getSharedPreferences("currentLoop",Context.MODE_PRIVATE);
-            if (indexLoop < sharedPref.getInt("loopCount",1)) {
-                indexLoop = sharedPref.getInt("loopCount", 1);
-            }
-            System.out.println("shared pref loop at " + indexLoop);
-            initialImageCall();
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (queue != null) {
-            queue.stop();
-        }
-        sharedPref = getSharedPreferences("currentLoop",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("loopCount", indexLoop);
-        editor.commit();
-    }
-*/
     public void volleyRequest(String url, final VolleyCallback callback) {
         queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -130,7 +96,6 @@ public class LoadActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("failed");
                 System.out.println(error);
             }
         });
@@ -175,6 +140,7 @@ public class LoadActivity extends AppCompatActivity {
         });
     }
 
+    //Request for the image sprites of each pokemon
     public void volleyRequestTwo(String imageUrl, final VolleyImageCallback callback) {
         queue = Volley.newRequestQueue(this);
         ImageRequest imageRequest = new ImageRequest(imageUrl,

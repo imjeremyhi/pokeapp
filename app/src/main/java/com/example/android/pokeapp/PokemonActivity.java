@@ -45,7 +45,7 @@ import java.util.Set;
  * Created by Jeremy Fu on 8/09/2016.
  */
 public class PokemonActivity extends AppCompatActivity {
-
+    //Detailed screen of the particular Pokemon the user pressed in the recycler view of all Pokemon
     private TextView number;
     private TextView name;
     private TextView typeOne;
@@ -63,7 +63,6 @@ public class PokemonActivity extends AppCompatActivity {
     private TextView totalData;
     private TextView evolution;
     private TextView location;
-    //private TextView moves;
     private ProgressBar hpBar;
     private ProgressBar attackBar;
     private ProgressBar defenseBar;
@@ -85,10 +84,8 @@ public class PokemonActivity extends AppCompatActivity {
         setContentView(R.layout.pokedex_record);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ff0000")));
-        //JSON  request
         myDbHelper = new PokemonDbHelper(this);
         myDbAccess = new PokemonDbAccess(myDbHelper);
-
     }
 
     @Override
@@ -96,9 +93,12 @@ public class PokemonActivity extends AppCompatActivity {
         super.onStart();
         requestedPokemon = new Pokemon();
         detailPokemon = myDbAccess.getPokemon(getIntent().getStringExtra("number"));
+
+        //Volley request sent if the pokemon record in the database is incomplete
         if (detailPokemon.getType() == null) {
             volleyDetailRequest();
         } else if (detailPokemon.getType() != null) {
+            //Otherwise database record for the pokemon is complete so fill fields in activity with values stored in database
             fillFields();
         }
     }
@@ -123,11 +123,9 @@ public class PokemonActivity extends AppCompatActivity {
     }
 
     private void fillFields() {
-        //int intentNumber = Integer.parseInt(getIntent().getStringExtra("number"));
         if (requestedPokemon.getType() != null) {
             requestedPokemon.setNumber(detailPokemon.getNumber());
             myDbAccess.updatePokemon(requestedPokemon);
-            System.out.println("after update " + myDbAccess.getPokemon(getIntent().getStringExtra("number")).getType());
             detailPokemon.setType(requestedPokemon.getType());
             detailPokemon.setAbilities(requestedPokemon.getAbilities());
             detailPokemon.setHp(requestedPokemon.getHp());
@@ -145,17 +143,13 @@ public class PokemonActivity extends AppCompatActivity {
 
         number = (TextView) findViewById(R.id.number);
         number.setText(detailPokemon.getNumber());
-        //number.setText("001");
 
         name = (TextView) findViewById(R.id.name);
         name.setText(detailPokemon.getName());
-        //name.setText("Bulbasaur");
 
         typeOne = (TextView) findViewById(R.id.typeOne);
         typeTwo = (TextView) findViewById(R.id.typeTwo);
         String typeString = detailPokemon.getType();
-        //int typeLength = typeString.length()-1-1;
-        //typeString = typeString.substring(0,typeLength);
 
         int i = 0;
         String firstType = "";
@@ -242,10 +236,7 @@ public class PokemonActivity extends AppCompatActivity {
         totalData = (TextView) findViewById(R.id.totalData);
         int totalResult = hpResult + attackResult + defenseResult + spAttackResult + spDefenseResult + speedResult;
         totalData.setText(Integer.toString(totalResult));
-/*
-        evolution = (TextView) findViewById(R.id.evolution);
-        evolution.setText("Evolutions:\n" + "Bulbasaur -> " + "Ivysaur -> " + "Venusaur");
-*/
+
         location = (TextView) findViewById(R.id.location);
         String locationString = "";
         if (detailPokemon.getLocations() == null) {
@@ -257,13 +248,10 @@ public class PokemonActivity extends AppCompatActivity {
         locationString = locationString.substring(0,locationLength);
         location.setText("Locations:\n" + locationString);
 
-        //moves = (TextView) findViewById(R.id.moves);
         String movesString = detailPokemon.getMoves();
         int movesLength = movesString.length()-1-1;
         movesString = movesString.substring(0,movesLength);
         movesList = new ArrayList<>(Arrays.asList(movesString.split(",")));
-
-        //moves.setText("Moves:\n" + movesString);
 
         evolution = (TextView) findViewById(R.id.evolution);
         String evolutionString = detailPokemon.getEvolution();
@@ -271,19 +259,10 @@ public class PokemonActivity extends AppCompatActivity {
         evolutionString = evolutionString.substring(0,chainLength);
         evolution.setText("Evolution:\n" + evolutionString);
     }
-    /*
-    public void typeColour(String type) {
 
-        if(type.contains("Fire"))
-        type.contains("Electric")
-        type.contains
-    }
-    */
-
+    //Using callbacks to control successive requests sent to pokeapi to get the various data of the pokemon selected
     public void volleyDetailRequest() {
         progressDialog = progressDialog.show(this, "Loading", "Wait while loading...");
-        //progressDialog.setCancelable(true);
-        //progressDialog.setCanceledOnTouchOutside(false);
         final String numberPassed = getIntent().getStringExtra("number");
         queue = Volley.newRequestQueue(this);
         String url = "http://pokeapi.co/api/v2/pokemon/" + numberPassed;
@@ -307,7 +286,6 @@ public class PokemonActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(String result) {
                                             evolutionProcessing(result);
-                                            //Fill pokedex_record xml with values retrieved from jsonrequest in pokemon.java class
                                             fillFields();
                                             progressDialog.dismiss();
                                         }
@@ -335,6 +313,8 @@ public class PokemonActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                //Error in requests - either user has no internet, or pokeapi not giving a response. 
+                //Return user to main page and show a message that there was a connection issue
                 progressDialog.dismiss();
                 Toast.makeText(PokemonActivity.this, "Connection error please try again later", Toast.LENGTH_LONG).show();
                 onBackPressed();
@@ -425,18 +405,11 @@ public class PokemonActivity extends AppCompatActivity {
                     JSONObject versionDetailsObj = (JSONObject)versionDetailsArray.get(j);
                     JSONObject versionGroupObj = versionDetailsObj.getJSONObject("version_group");
                     String version = versionGroupObj.getString("name");
-                    //System.out.println(version);
-                    //if (version.equals("omega-ruby-alpha-sapphire")) {
                     found = 1;
                     String levelLearned = versionDetailsObj.getString("level_learned_at");
-                    //System.out.println("Level learned " + levelLearned);
-                                        /*if (levelLearned.equals("0")) {
-                                            //handle this on query end instead
-                                        }*/
                     JSONObject moveLearnedMethodObject = versionDetailsObj.getJSONObject("move_learn_method");
                     String levelMethod = moveLearnedMethodObject.getString("name");
-                    //System.out.println("Level Method " + levelMethod);
-                    //}
+
                 }
                 if (found == 1) {
                     JSONObject moveObjectInner = moveObj.getJSONObject("move");
@@ -444,7 +417,6 @@ public class PokemonActivity extends AppCompatActivity {
                     String capitalMove = move.substring(0,1).toUpperCase() + move.substring(1);
                     movesLearnable = movesLearnable + capitalMove + ", ";
                     requestedPokemon.setMoves(movesLearnable);
-                    //System.out.println(move + " ");
                 }
             }
 
@@ -469,6 +441,7 @@ public class PokemonActivity extends AppCompatActivity {
                         JSONObject versionObject = (JSONObject) versionDetailsArray.get(j);
                         JSONObject versionObjectInner = versionObject.getJSONObject("version");
                         String version = versionObjectInner.getString("name");
+                        //Get locations from only the relevant games that have a kanto region
                         if (version.equals("firered") || version.equals("leafgreen") ||
                                 version.equals("heartgold") || version.equals("soulsilver") ||
                                 version.equals("crystal")) {
@@ -495,7 +468,7 @@ public class PokemonActivity extends AppCompatActivity {
 
     public void evolutionProcessing(String result) {
         try {
-            //Evolution chain only from pokemon-species api
+            //Evolution chain from initial request to pokemon-species in pokeapi
             String evolutionChainStore = "";
             JSONObject evolutionObject = new JSONObject(result);
             JSONObject chainObject = evolutionObject.getJSONObject("chain");
@@ -526,6 +499,7 @@ public class PokemonActivity extends AppCompatActivity {
     }
 
     public String typeColour(String type) {
+        //Use hashmap which corresponds a pokemon type to a colour
         HashMap typeColourMap = new HashMap();
         typeColourMap.put("Normal", "#A8A77A");
         typeColourMap.put("Fire", "#EE8130");
@@ -545,17 +519,7 @@ public class PokemonActivity extends AppCompatActivity {
         typeColourMap.put("Dark", "#705746");
         typeColourMap.put("Steel", "#B7B7CE");
         typeColourMap.put("Fairy", "#D685AD");
-
         String colour = (String) typeColourMap.get(type);
-        /*
-        Set set = typeColourMap.entrySet();
-        Iterator i = set.iterator();
-        while(i.hasNext()) {
-            Map.Entry me = (Map.Entry)i.next();
-            System.out.print(me.getKey() + ": ");
-            System.out.println(me.getValue());
-        }
-        */
         return colour;
     }
 

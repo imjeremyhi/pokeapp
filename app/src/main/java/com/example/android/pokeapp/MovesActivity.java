@@ -24,7 +24,7 @@ public class MovesActivity extends AppCompatActivity {
         myRecyclerView = (RecyclerView)findViewById(R.id.myMovesRecyclerView);
         myLinearLayoutManager = new LinearLayoutManager(this);
         myRecyclerView.setLayoutManager(myLinearLayoutManager);
-        myAdapter = new MovesRecyclerAdapter(getIntent().getStringArrayListExtra("moves"/*pokemonList*/));
+        myAdapter = new MovesRecyclerAdapter(getIntent().getStringArrayListExtra("moves"));
         myRecyclerView.setAdapter(myAdapter);
     }
 

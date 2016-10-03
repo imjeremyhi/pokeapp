@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by Jeremy Fu on 8/09/2016.
+ * Based from Android Developer Documentation
  */
 public final class PokemonDbContract {
 
@@ -63,13 +64,6 @@ public final class PokemonDbContract {
         public static final String COLUMN_NAME_FOURTEEN = "locations";
         public static final String COLUMN_NAME_FIFTEEN = "moves";
         public static final String COLUMN_NAME_SIXTEEN = "evolution";
-
-
-        /*
-        public static final String COLUMN_NAME_FIVE = "image";
-        public static final String COLUMN_NAME_SIX = "moves";
-
-        */
     }
 
     public PokemonDbContract(SQLiteOpenHelper dbHelper) {
@@ -97,13 +91,6 @@ public final class PokemonDbContract {
         values.put(PokemonEntry.COLUMN_NAME_FIFTEEN, pokemon.getMoves());
         values.put(PokemonEntry.COLUMN_NAME_SIXTEEN, pokemon.getEvolution());
 
-
-
-        /*
-        byte[] img = getBitmapAsByteArray(pokemon.getHeight());
-        values.put(PokeBallsEntry.COLUMN_NAME_IMG, img);
-        values.put(PokeBallsEntry.COLUMN_NAME_PRICE, pokeBall.getPrice());
-*/
         long newRowId;
         newRowId = db.insert(TABLE_NAME, null, values);
         db.close();
@@ -238,7 +225,6 @@ public final class PokemonDbContract {
             pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_THREE)));
             pokemon.setAbilities(cur.getString(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_FOUR)));
             pokemon.setHeight(cur.getString(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_FIVE)));
-            //ball.setIcon(BitmapFactory.decodeByteArray(img, 0, img.length));
             pokemon.setWeight(cur.getString(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_SIX)));
             pokemon.setImage(cur.getBlob(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_SEVEN)));
             pokemon.setHp(cur.getString(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_EIGHT)));
@@ -250,13 +236,6 @@ public final class PokemonDbContract {
             pokemon.setLocations(cur.getString(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_FOURTEEN)));
             pokemon.setMoves(cur.getString(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_FIFTEEN)));
             pokemon.setEvolution(cur.getString(cur.getColumnIndexOrThrow(PokemonEntry.COLUMN_NAME_SIXTEEN)));
-
-
-/*
-            byte[] img = cur.getBlob(cur.getColumnIndexOrThrow(PokeBallsEntry.COLUMN_NAME_IMG));
-            pokemon.setIcon(BitmapFactory.decodeByteArray(img, 0, img.length));
-            pokemon.setPrice(cur.getInt(cur.getColumnIndexOrThrow(PokeBallsEntry.COLUMN_NAME_PRICE)));
-            */
         }
         cur.close();
         db.close();
@@ -289,11 +268,4 @@ public final class PokemonDbContract {
         db.update(TABLE_NAME, values, selection, selectionArgs);
         db.close();
     }
-/*
-    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-        return outputStream.toByteArray();
-    }
-    */
 }

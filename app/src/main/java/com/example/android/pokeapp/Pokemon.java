@@ -10,6 +10,8 @@ import java.sql.Blob;
  * Created by Jeremy Fu on 7/09/2016.
  */
 public class Pokemon implements Serializable {
+    //Class for the pokemon objects. Implements serializable as pokemon objects need to be 
+    //passed around in the application
     private String number;
     private String name;
     private String type;
@@ -26,9 +28,6 @@ public class Pokemon implements Serializable {
     private String locations;
     private String moves;
     private String evolution;
-
-    //private String stats;
-    //private String location;
 
     public Pokemon() {
 
@@ -54,21 +53,6 @@ public class Pokemon implements Serializable {
         this.moves = moves;
         this.evolution = evolution;
     }
-
-    /*
-    public Pokemon(JSONObject pokemonJSON) {
-        try {
-            number = pokemonJSON.getString("number");
-            name = pokemonJSON.getString("name");
-            type = pokemonJSON.getString("type");
-            height = pokemonJSON.getString("height");
-            weight = pokemonJSON.getString("weight");
-            stats = pokemonJSON.getString("stats");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    */
 
     public String getNumber() {
         return number;

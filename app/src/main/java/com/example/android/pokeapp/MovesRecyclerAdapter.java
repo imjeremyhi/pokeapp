@@ -12,11 +12,10 @@ import java.util.List;
 
 /**
  * Created by Jeremy Fu on 27/09/2016.
+ * Based from Android Developer Documentation
  */
 public class MovesRecyclerAdapter extends RecyclerView.Adapter<MovesRecyclerAdapter.ViewHolder> {
     private List<String> movesList;
-
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView move;
@@ -40,7 +39,6 @@ public class MovesRecyclerAdapter extends RecyclerView.Adapter<MovesRecyclerAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        System.out.println("called");
         holder.move.setText(movesList.get(position));
     }
 
